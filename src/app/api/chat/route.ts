@@ -48,27 +48,14 @@ export async function POST(request: NextRequest) {
 
         const prompt = `${systemInstruction}\n\nUser Message: ${messages[messages.length - 1].content}`;
 
-        const stream = new ReadableStream({
-            async start(controller) {
-                try {
-                    const result = await chatModel.generateContentStream([prompt]);
-                    for await (const chunk of result.stream) {
-                        const text = chunk.text();
-                        controller.enqueue(new TextEncoder().encode(text));
-                    }
-                    controller.close();
-                } catch (e: any) {
-                    console.error("Gemini Stream Error:", e);
-                    const errorMessage = e?.message || "Unknown Error";
-                    controller.enqueue(new TextEncoder().encode(`Error: ${errorMessage}`));
-                    controller.close();
-                }
-            }
-        });
-
-        return new NextResponse(stream, {
-            headers: { 'Content-Type': 'text/plain; charset=utf-8' }
-        });
+        try {
+            const result = await chatModel.generateContent(prompt);
+            const responseText = result.response.text();
+            return new NextResponse(responseText);
+        } catch (e: any) {
+            console.error("Gemini Chat Error:", e);
+            return new NextResponse(`Error: ${e.message}`, { status: 500 });
+        }
 
     } catch (error) {
         console.error('Chat error:', error);
