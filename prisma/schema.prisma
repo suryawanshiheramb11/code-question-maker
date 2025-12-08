@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Question {
+  id           String       @id @default(uuid())
+  title        String
+  description  String
+  difficulty   String       @default("Unknown")
+  tags         String       @default("[]") // JSON string of tags
+  solutionCode String?      // The reference solution code
+  starterCode  String?      // The starter code for the user
+  confidence   Float?       // AI parsing confidence score
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  testCases    TestCase[]
+  attachments  Attachment[]
+}
+
+model TestCase {
+  id         String   @id @default(uuid())
+  type       String   @default("input-output") // "input-output", "assert"
+  stdin      String?
+  expected   String?
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Attachment {
+  id         String   @id @default(uuid())
+  path       String
+  fileType   String   // "pdf", "image", "text"
+  questionId String?
+  question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}

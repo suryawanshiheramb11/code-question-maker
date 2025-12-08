@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Inline Edit</title>
+</head>
+<body>
+  <ul id="items">
+    <li>Learn DOM</li>
+    <li>Practice events</li>
+    <li>Build projects</li>
+  </ul>
+
+  <script>
+    // Write your code here
+    const list = document.getElementById('items');
+
+    list.addEventListener('dblclick' , function(e){
+      const li = e.target.closest(li);
+      if(!li) return ; 
+
+      const preview = li.textContent;
+      li.contentEditable = 'true' ;
+      li.focus();
+
+      function finish(){
+        li.contentEditable = 'false' ;
+        if(li.textContent.trim() == ''){
+          li.textContent = preview ;
+         }
+        li.removeEventListener ('blur' , onBlur);
+        li.removeEventListener ('keydown' , onKey) ;
+      }
+
+      function onBlur(){
+        finish();
+      }
+
+      function onKey(event){
+        if(event.key == 'Enter'){
+          event.preventDefault();
+          finish();
+        }
+      }
+
+      li.addEventListener('blur' , onBlur);
+      li.addEventListener('keydown' , onKey) ;
+
+    })
+  </script>
+</body>
+</html>

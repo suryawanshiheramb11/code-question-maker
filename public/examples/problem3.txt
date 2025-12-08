@@ -1,0 +1,12 @@
+Problem: Is Even?
+
+Return true if number is even, else false.
+
+function solution(n) {
+  return n % 2 === 0;
+}
+
+Test:
+2 -> true
+3 -> false
+0 -> true

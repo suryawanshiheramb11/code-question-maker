@@ -1,0 +1,15 @@
+Q1. Sum of Two Numbers
+Description:
+Write a function `sum(a, b)` that returns the sum of two numbers.
+
+Solution:
+function solution(a, b) {
+  return a + b;
+}
+
+Test Cases:
+Input: [1, 2]
+Expected: 3
+
+Input: [-1, 1]
+Expected: 0
